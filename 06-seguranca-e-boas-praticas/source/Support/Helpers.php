@@ -109,3 +109,8 @@ function str_limit_chars(string $string, int $limit, $pointer = "..."): string
  {
     return new \Source\Core\Session();
  }
+
+ function user()
+ {
+     return new \Source\Models\User();
+ }
