@@ -9,7 +9,26 @@ require __DIR__ . "/../source/autoload.php";
  */
 fullStackPHPClassSession("validate", __LINE__);
 
+$message = new \Source\Core\Message();
 
+$email = "cursos@upinside.com";
+
+if (!is_email($email)) {
+    echo $message->error("Email");
+}else {
+    echo $message->success("Email");
+}
+
+
+$passwd = "12345678123456781234567812345678123456781";
+
+echo mb_strlen($passwd);
+
+if (!is_passwd($passwd)) {
+    echo $message->error("Senha");
+}else {
+    echo $message->success("Senha");
+}
 /*
  * [ navigation helpers ] Funções para sintetizar rotinas de navegação
  */

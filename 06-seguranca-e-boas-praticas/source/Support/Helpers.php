@@ -1,6 +1,24 @@
 <?php
 
 /**
+ * ####################
+ * ###   VALIDATE   ###
+ * ####################
+ */
+
+
+ function is_email(string $email): bool 
+ {
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+ }
+
+ function is_passwd(string $password):bool
+ {
+    return (mb_strlen($password) >= CONF_PASSWD_MIN_LEN && mb_strlen($password) <= CONF_PASSWD_MAX_LEN ? true : false);
+ }
+
+
+/**
  * ##################
  * ###   STRING   ###
  * ##################
@@ -68,3 +86,26 @@ function str_limit_chars(string $string, int $limit, $pointer = "..."): string
 
     return "{$chars}{$pointer}";
 }
+
+
+/**
+ * ################
+ * ###   CORE   ###
+ * ################
+ */
+
+
+ function db()
+ {
+    return new \Source\Core\Connect::getInstance();
+ }
+
+ function message()
+ {
+    return new \Source\Core\Message();
+ }
+
+ function session() 
+ {
+    return new \Source\Core\Session();
+ }
