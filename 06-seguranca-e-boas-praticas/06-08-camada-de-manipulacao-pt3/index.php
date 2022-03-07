@@ -41,3 +41,4 @@ fullStackPHPClassSession("navigation", __LINE__);
 fullStackPHPClassSession("triggers", __LINE__);
 
 
+var_dump(user()->load(1));

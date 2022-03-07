@@ -95,22 +95,43 @@ function str_limit_chars(string $string, int $limit, $pointer = "..."): string
  */
 
 
- function db()
+ /**
+ * @return PDO
+ */
+ function db(): PDO
  {
-    return new \Source\Core\Connect::getInstance();
+     return new \Source\Core\Connect::getInstance();
  }
 
- function message()
+  /**
+ * @return \Source\Core\Message
+ */
+ function message(): \Source\Core\Message
  {
     return new \Source\Core\Message();
  }
 
- function session() 
+ /**
+ * @return \Source\Core\Session
+ */
+ function session(): \Source\Core\Session
  {
     return new \Source\Core\Session();
  }
 
- function user()
+
+ 
+/**
+ * #################
+ * ###   MODEL   ###
+ * #################
+ */
+
+
+/**
+ * @return \Source\Models\User
+ */
+ function user(): \Source\Models\User
  {
      return new \Source\Models\User();
  }
