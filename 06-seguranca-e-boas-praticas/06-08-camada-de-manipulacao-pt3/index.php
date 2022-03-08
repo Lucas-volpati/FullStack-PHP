@@ -1,4 +1,7 @@
 <?php
+
+use Source\Models\User;
+
 require __DIR__ . '/../../fullstackphp/fsphp.php';
 fullStackPHPClassName("06.08 - Camada de manipulação pt3");
 
@@ -34,6 +37,13 @@ if (!is_passwd($passwd)) {
  */
 fullStackPHPClassSession("navigation", __LINE__);
 
+var_dump(url("/blog/titulo-do-artigo"));
+var_dump(url("blog/titulo-do-artigo"));
+
+if (empty($_GET)) {
+    redirect("?f=true");
+}
+
 
 /*
  * [ class triggers ] São gatilhos globais para criação de objetos
@@ -42,3 +52,10 @@ fullStackPHPClassSession("triggers", __LINE__);
 
 
 var_dump(user()->load(1));
+
+echo message()->error("Esse é um erro!");
+echo message()->warning("Esse é um aviso");
+
+// session("User", user()->load(2));
+
+// var_dump(session()->all());

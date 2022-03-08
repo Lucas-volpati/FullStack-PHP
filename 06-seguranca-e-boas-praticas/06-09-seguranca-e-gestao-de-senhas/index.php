@@ -26,3 +26,12 @@ fullStackPHPClassSession("password verify", __LINE__);
  * [ password handler ] Sintetizando uso de senhas
  */
 fullStackPHPClassSession("password handler", __LINE__);
+
+$passwd = "1234567";
+
+var_dump([
+    $hash = passwd($passwd),
+    passwd_verify("1234567", $hash),
+    passwd_rehash($hash)
+    
+]);

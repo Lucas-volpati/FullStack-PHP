@@ -12,7 +12,7 @@
  /**
   * PROJECT URL's
   */
- define("CONF_URL_BASE", "http://localhost/FullSPHP");
+ define("CONF_URL_BASE", "http://localhost/FullStack-PHP/06-seguranca-e-boas-praticas/06-08-camada-de-manipulacao-pt3");
  define("CONF_URL_ADMIN", CONF_URL_BASE . "/admin");
  define("CONF_URL_ERROR", CONF_URL_BASE . "/404");
 
@@ -34,7 +34,8 @@ define("CONF_DATE_APP", "Y-m-d H:i:s");
 
   define("CONF_PASSWD_MIN_LEN", 8);
   define("CONF_PASSWD_MAX_LEN", 40);
-
+  define("CONF_PASSWD_ALGO", PASSWORD_DEFAULT);
+  define("CONF_PASSWD_OPTION", ["cost" => 10]);
 
  /**
   * MESSAGES
