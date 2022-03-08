@@ -1,5 +1,8 @@
 <?php
 
+use Source\Core\Connect;
+
+
 /**
  * ####################
  * ###   VALIDATE   ###
@@ -17,12 +20,28 @@
     return (mb_strlen($password) >= CONF_PASSWD_MIN_LEN && mb_strlen($password) <= CONF_PASSWD_MAX_LEN ? true : false);
  }
 
+ function passwd(string $password): string 
+ {
+     return password_hash($password, CONF_PASSWD_ALGO, CONF_PASSWD_OPTION);
+ }
+
+ function passwd_verify(string $password, string $hash): bool
+ {
+     return password_verify($password, $hash);
+ }
+
+ function passwd_rehash(string $hash): bool
+ {
+     return password_needs_rehash($hash, CONF_PASSWD_ALGO, CONF_PASSWD_OPTION);
+ }
+
 
 /**
  * ##################
  * ###   STRING   ###
  * ##################
  */
+
 
 function str_slug(string $string): string
 {
@@ -89,6 +108,32 @@ function str_limit_chars(string $string, int $limit, $pointer = "..."): string
 
 
 /**
+ * ######################
+ * ###   NAVIGATION   ###
+ * ######################
+ */
+
+
+ function url(string $path): string
+ {
+    return CONF_URL_BASE . "/" . ($path[0] == "/" ? mb_substr($path, 1) : $path);
+ }
+
+ function redirect(string $url):void
+ {
+    header("HTTP/1.1 302 Redirect");
+    if (filter_var($url, FILTER_VALIDATE_URL)) {
+        header("Location: {$url}");
+        exit;
+    }
+
+    $location = url($url);
+    header("Location: {$location}");
+    exit;
+ }
+
+
+/**
  * ################
  * ###   CORE   ###
  * ################
@@ -96,12 +141,12 @@ function str_limit_chars(string $string, int $limit, $pointer = "..."): string
 
 
  /**
- * @return PDO
- */
- function db(): PDO
- {
-     return new \Source\Core\Connect::getInstance();
- }
+  * @return PDO
+  */
+function db(): PDO
+{
+    return \Source\Core\Connect::getInstance();
+}
 
   /**
  * @return \Source\Core\Message
@@ -120,7 +165,6 @@ function str_limit_chars(string $string, int $limit, $pointer = "..."): string
  }
 
 
- 
 /**
  * #################
  * ###   MODEL   ###
