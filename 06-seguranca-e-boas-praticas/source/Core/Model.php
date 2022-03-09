@@ -12,8 +12,16 @@ abstract class Model {
     /** @var \PDOException|null */
     protected $fail;
 
-    /** @var string|null */
+    /** @var Message|null */
     protected $message;
+
+    /**
+     * Message
+     */
+    public function __construct()
+    {
+        $this->message = new Message();
+    }
 
     public function __set($name, $value)
     {
@@ -42,7 +50,10 @@ abstract class Model {
         return $this->fail;
     }
 
-    public function message() :?string {
+    /**
+     * @return Message|null
+     */
+    public function message(): ?Message {
         return $this->message;
     }
 
@@ -156,5 +167,16 @@ abstract class Model {
             $filter[$key] = (is_null($value) ? null : filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS));
         }
         return $filter;
+    }
+
+    protected function required(): bool
+    {
+        $data = (array) $this->data();
+        foreach (static::$required as $field) {
+            if (empty($data[$field])) {
+                return false;
+            }
+        }
+        return true;
     }
 }
