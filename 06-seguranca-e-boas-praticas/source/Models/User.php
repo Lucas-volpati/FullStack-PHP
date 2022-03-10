@@ -5,7 +5,7 @@ namespace Source\Models;
 use Source\Core\Model;
 
 class User extends Model {
-    
+
     /** @var array $safe no update or create */
     protected static $safe = ["id", "created_at", "updated_at"];
 
@@ -32,20 +32,20 @@ class User extends Model {
      */
     public function find(string $terms, string $params, string $columns = "*"): ?User {
         $find = $this->read("SELECT {$columns} FROM ". self::$entity ." WHERE {$terms}", $params);
-        if ($this->fail() || !$load->rowCount()) {
+        if ($this->fail() || !$find->rowCount()) {
             return null;
         }
-        return $load->fetchObject(__CLASS__);
+        return $find->fetchObject(__CLASS__);
     }
 
-    public function findById(int $id, string $columns = "*") :?User 
-    {        
+    public function findById(int $id, string $columns = "*") :?User
+    {
         return $this->find("id=:id", "id={$id}", $columns);
     }
 
-    public function findByEmail($email, string $columns = "*") :?User 
-    {        
-        return $this->find("email=:email", "email={$email}", $columns);
+    public function findByEmail($email, string $columns = "*") :?User
+    {
+        return $this->find("email = :email", "email={$email}", $columns);
     }
 
     public function all($limit = 30, $offset = 0, $columns = "*") :?array {
@@ -63,44 +63,40 @@ class User extends Model {
             $this->message->warning("Nome, sobrenome, email e senha são obrigatórios.");
             return null;
         }
-        
+
         /** User update */
         if (!empty($this->id)) {
             $userId = $this->id;
 
-            $email = $this->read("SELECT id FROM users WHERE email = :email AND id = :id", "email={$this->email}&id={$userId}");
-
-            if ($email->rowCount()) {
-                $this->message = "O email informado já está cadastrado!";
+            if ($this->find("email = :e AND id != :i", "e = {$this->email}&i={$userId}")) {
+                $this->message->warning("O email informado já está cadastrado!");
                 return null;
             }
 
             $this->update(self::$entity, $this->safe(), "id=:id", "id={$userId}");
 
             if ($this->fail()) {
-                $this->message = "Erro ao atualizar, veririfique os dados";
+                $this->message->error("Erro ao atualizar, veririfique os dados");
+                return null;
             }
-
-            $this->message = "Dados atualizados com sucesso!";
         }
-        
+
         /** User Create */
         if (empty($this->id)) {
-            if ($this->find($this->email)) {
-                $this->message = "O email informado já está cadastrado!";
+            if ($this->findByEmail($this->email)) {
+                $this->message->warning("O email informado já está cadastrado!");
                 return null;
             }
 
             $userId = $this->create(self::$entity, $this->safe());
 
             if ($this->fail()) {
-                $this->message = "Erro ao cadastrar, veririfique os dados";
+                $this->message->error("Erro ao cadastrar, veririfique os dados");
+                return null;
             }
-
-            $this->message = "Cadastro realizado com sucesso!";
         }
 
-        $this->data = $this->read("SELECT * FROM users WHERE id = :id", "id={$userId}")->fetch();
+        $this->data = ($this->findById($userId))->data(); //$this->read("SELECT * FROM users WHERE id = :id", "id={$userId}")->fetch();
         return $this;
     }
 
