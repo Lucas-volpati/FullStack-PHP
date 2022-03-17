@@ -49,7 +49,7 @@ class User extends Model {
     }
 
     public function all($limit = 30, $offset = 0, $columns = "*") :?array {
-        $all = $this->read("SELECT {$columns} FROM ". self::$entity ." LIMIT :l OFFSET :o", "l={$limit}&o={$offset}");
+        $all = $this->read("SELECT {$columns} FROM ". self::$entity ." LIMIT :limit OFFSET :offset", "limit={$limit}&offset={$offset}");
         if ($this->fail() || !$all->rowCount()) {
             return null;
         }
@@ -60,8 +60,22 @@ class User extends Model {
     public function save() :?User {
 
         if (!$this->required()) {
-            $this->message->warning("Nome, sobrenome, email e senha são obrigatórios.");
+            $this->message->warning("Nome, sobrenome, email e senha são obrigatórios");
             return null;
+        }
+
+        if (!is_email($this->email)) {
+            $this->message()->warning("O formato do e-mail é inválido");
+            return null;
+        }
+
+        if (!is_passwd($this->password)) {
+            $min = CONF_PASSWD_MIN_LEN;
+            $max = CONF_PASSWD_MAX_LEN;
+            $this->message()->warning("A senha deve ter entre {$min} e {$max} caracteres");
+            return null;
+        }else {
+            $this->password = passwd($this->password);
         }
 
         /** User update */
@@ -69,7 +83,7 @@ class User extends Model {
             $userId = $this->id;
 
             if ($this->find("email = :e AND id != :i", "e = {$this->email}&i={$userId}")) {
-                $this->message->warning("O email informado já está cadastrado!");
+                $this->message->warning("O email informado já está cadastrado");
                 return null;
             }
 
@@ -84,7 +98,7 @@ class User extends Model {
         /** User Create */
         if (empty($this->id)) {
             if ($this->findByEmail($this->email)) {
-                $this->message->warning("O email informado já está cadastrado!");
+                $this->message->warning("O email informado já está cadastrado");
                 return null;
             }
 
@@ -106,11 +120,11 @@ class User extends Model {
         }
 
         if ($this->fail()) {
-            $this->message = "Não foi póssivel remover o usuário!";
+            $this->message = "Não foi póssivel remover o usuário";
             return null;
         }
 
-        $this->message = "Usuário removido com sucesso!";
+        $this->message = "Usuário removido com sucesso";
         $this->data = null;
         return $this;
     }
