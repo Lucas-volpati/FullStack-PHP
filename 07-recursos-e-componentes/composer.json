@@ -1,0 +1,26 @@
+{
+    "name": "upinside/fsphp",
+    "description": "Formação FullStack PHP",
+    "minimum-stability": "stable",
+    "authors": [{
+        "name": "Lucas A. Rodrigues Volpati",
+        "email": "lucas.volpati@outlook.com",
+        "homepage": "https://www.github.com/Lucas-volpati",
+        "role": "Developer"
+    }],
+    "config": {
+        "vendor-dir": "vendor"
+    },
+    "autoload": {
+        "psr-4": {
+            "Source\\": "source/"
+        },
+        "files": [
+            "source/Support/Config.php",
+            "source/Support/Helpers.php"
+        ]
+    },
+    "require": {
+        
+    }
+}
